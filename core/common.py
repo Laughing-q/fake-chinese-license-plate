@@ -44,4 +44,5 @@ ProvinceChar = {"京": "ABCDEFGHJKLMNPQRSTUVWXYZ",
 
 AlphabetChar = "ABCDEFGHJKLMNPQRSTUVWXYZ"
 NumberChar = "0123456789"
-SpecialChar = "使领港澳学警试超"
+# SpecialChar = "使领港澳学警试超"
+SpecialChar = "使领港澳学警"

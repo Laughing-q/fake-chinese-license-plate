@@ -60,7 +60,7 @@ class Plate:
         return c
 
 
-class Blue440x140(Plate):
+class Black440x140(Plate):
 
     def __init__(self):
         super().__init__()
@@ -80,7 +80,7 @@ class Blue440x140(Plate):
         font = [n for n in font_name if n.startswith('140')]
         self.fonts = {re.findall(r"_(.?).jpg", f)[0]: cv2.resize(cv_imread(os.path.join('./source/font', f)),
                                                                  ((self.ch_width, self.ch_height))) for f in font}
-        self.template = cv2.resize(cv_imread('./source/plate/blue_140.PNG'), (self.lp_width, self.lp_height))[..., :3]
+        self.template = cv2.resize(cv_imread('./source/plate/black_140.png'), (self.lp_width, self.lp_height))[..., :3]
 
     def getCharImg(self, char, size):
         char_img = self.fonts[char]
@@ -90,8 +90,13 @@ class Blue440x140(Plate):
         prov = ProvinceChar.keys()
         _prov = random.choice(list(prov))
         _city = random.choice(ProvinceChar[_prov])
-        _code = self.getRandomCode(num=5)
-        code = _prov + _city + _code
+        if random.uniform(0, 1) < 0.5:
+            _code = self.getRandomCode(num=4)
+            _suffix = random.choice(list(SpecialChar))
+            code = _prov + _city + _code + _suffix
+        else:
+            _code = self.getRandomCode(num=5)
+            code = _prov + _city + _code
 
         img = np.ones((self.lp_height, self.lp_width, 3), dtype=np.uint8) * 255
 
@@ -116,6 +121,217 @@ class Blue440x140(Plate):
             self.ch_width, self.ch_height))
 
         return code, cv2.bitwise_or(~img, self.template)
+
+class Blue440x140(Plate):
+
+    def __init__(self):
+        super().__init__()
+
+        self.lp_height = 280
+        self.lp_width = 880
+
+        self.ch_height = 180
+        self.ch_width = 90
+
+        self.up_interval = 50
+        self.left_interval = 45
+        self.ch_interval = 24
+        self.point_size = 20
+
+        font_name = os.listdir('./source/font')
+        font = [n for n in font_name if n.startswith('140')]
+        self.fonts = {re.findall(r"_(.?).jpg", f)[0]: cv2.resize(cv_imread(os.path.join('./source/font', f)),
+                                                                 ((self.ch_width, self.ch_height))) for f in font}
+        self.template = cv2.resize(cv_imread('./source/plate/blue_140.png'), (self.lp_width, self.lp_height))[..., :3]
+
+    def getCharImg(self, char, size):
+        char_img = self.fonts[char]
+        return cv2.resize(char_img, size)
+
+    def __call__(self, *args, **kwargs):
+        prov = ProvinceChar.keys()
+        _prov = random.choice(list(prov))
+        _city = random.choice(ProvinceChar[_prov])
+        if random.uniform(0, 1) < 0.5:
+            _code = self.getRandomCode(num=4)
+            _suffix = random.choice(list(SpecialChar))
+            code = _prov + _city + _code + _suffix
+        else:
+            _code = self.getRandomCode(num=5)
+            code = _prov + _city + _code
+
+        img = np.ones((self.lp_height, self.lp_width, 3), dtype=np.uint8) * 255
+
+        char_width_start = self.left_interval
+        char_width_end = char_width_start + self.ch_width
+        char_height_start = self.up_interval
+        char_height_end = char_height_start + self.ch_height
+        img[char_height_start:char_height_end, char_width_start:char_width_end] = self.getCharImg(code[0], (
+        self.ch_width, self.ch_height))
+
+        char_width_start = char_width_end + self.ch_interval
+        char_width_end = char_width_start + self.ch_width
+        img[char_height_start:char_height_end, char_width_start:char_width_end] = self.getCharImg(code[1], (
+        self.ch_width, self.ch_height))
+
+        char_width_end = char_width_end + self.point_size
+
+        for i in range(2, 7):
+            char_width_start = char_width_end + self.ch_interval
+            char_width_end = char_width_start + self.ch_width
+            img[char_height_start:char_height_end, char_width_start:char_width_end] = self.getCharImg(code[i], (
+            self.ch_width, self.ch_height))
+
+        return code, cv2.bitwise_or(~img, self.template)
+
+
+class White440x140(Plate):
+
+    def __init__(self):
+        super().__init__()
+
+        self.lp_height = 280
+        self.lp_width = 880
+
+        self.ch_height = 180
+        self.ch_width = 90
+
+        self.up_interval = 50
+        self.left_interval = 45
+        self.ch_interval = 24
+        self.point_size = 20
+
+        font_name = os.listdir('./source/font')
+        font = [n for n in font_name if n.startswith('140')]
+        self.fonts = {re.findall(r"_(.?).jpg", f)[0]: cv2.resize(cv_imread(os.path.join('./source/font', f)),
+                                                                 ((self.ch_width, self.ch_height))) for f in font}
+        self.template = cv2.resize(cv_imread('./source/plate/white_140.PNG'), (self.lp_width, self.lp_height))[..., :3]
+
+    def getCharImg(self, char, size):
+        char_img = self.fonts[char]
+        return cv2.resize(char_img, size)
+
+    def __call__(self, *args, **kwargs):
+        prov = ProvinceChar.keys()
+        _prov = random.choice(list(prov))
+        _city = random.choice(ProvinceChar[_prov])
+        if random.uniform(0, 1) < 0.5:
+            _code = self.getRandomCode(num=4)
+            _suffix = random.choice(list(SpecialChar))
+            code = _prov + _city + _code + _suffix
+        else:
+            _code = self.getRandomCode(num=5)
+            code = _prov + _city + _code
+
+        img = np.ones((self.lp_height, self.lp_width, 3), dtype=np.uint8) * 255
+
+        char_width_start = self.left_interval
+        char_width_end = char_width_start + self.ch_width
+        char_height_start = self.up_interval
+        char_height_end = char_height_start + self.ch_height
+        img[char_height_start:char_height_end, char_width_start:char_width_end] = self.getCharImg(code[0], (
+        self.ch_width, self.ch_height))
+
+        char_width_start = char_width_end + self.ch_interval
+        char_width_end = char_width_start + self.ch_width
+        img[char_height_start:char_height_end, char_width_start:char_width_end] = self.getCharImg(code[1], (
+        self.ch_width, self.ch_height))
+
+        char_width_end = char_width_end + self.point_size
+
+        for i in range(2, 7):
+            char_width_start = char_width_end + self.ch_interval
+            char_width_end = char_width_start + self.ch_width
+            img[char_height_start:char_height_end, char_width_start:char_width_end] = self.getCharImg(code[i], (
+            self.ch_width, self.ch_height))
+
+        return code, cv2.bitwise_and(img, self.template)
+
+
+class White440x220(Plate):
+
+    def __init__(self):
+        super().__init__()
+
+        self.lp_height = 440
+        self.lp_width = 880
+
+        self.up_interval = 30
+        self.up_ch_height = 120
+        self.up_ch_width = 160
+        self.up_ch_interval = 50
+        self.up_point_size = 20
+        self.up_left_interval = 220
+
+        self.interval = 30
+        self.dw_ch_height = 220
+        self.dw_ch_width = 130
+        self.dw_ch_interval = 30
+        self.dw_left_interval = 55
+
+        font_name = os.listdir('./source/font')
+        font1 = [n for n in font_name if n.startswith('220_up')]
+        self.up_fonts = {re.findall(r"_(.?).jpg", f)[0]: cv2.resize(cv_imread(os.path.join('./source/font', f)),
+                                                                 ((self.up_ch_width, self.up_ch_height))) for f in font1}
+
+        font2 = [n for n in font_name if n.startswith('220_down')]
+        self.dw_fonts = {re.findall(r"_(.?).jpg", f)[0]: cv2.resize(cv_imread(os.path.join('./source/font', f)),
+                                                                 ((self.up_ch_width, self.up_ch_height))) for f in font2}
+
+        font = [n for n in font_name if n not in font1 and n not in font2]
+        self.fonts = {re.findall(r"_(.?).jpg", f)[0]: cv2.resize(cv_imread(os.path.join('./source/font', f)),
+                                                                 ((self.up_ch_width, self.up_ch_height))) for f in font}
+
+        self.up_fonts.update(self.fonts)
+        self.dw_fonts.update(self.fonts)
+
+        self.template = cv2.resize(cv_imread('./source/plate/white_220.PNG'), (self.lp_width, self.lp_height))[..., :3]
+
+    def getCharImg(self, char, size):
+        char_img = self.fonts[char]
+        return cv2.resize(char_img, size)
+
+    def __call__(self, *args, **kwargs):
+        prov = ProvinceChar.keys()
+        _prov = random.choice(list(prov))
+        _city = random.choice(ProvinceChar[_prov])
+        if random.uniform(0, 1) < 0.5:
+            _code = self.getRandomCode(num=4)
+            _suffix = random.choice(list(SpecialChar))
+            code = _prov + _city + _code + _suffix
+        else:
+            _code = self.getRandomCode(num=5)
+            code = _prov + _city + _code
+
+        img = np.ones((self.lp_height, self.lp_width, 3), dtype=np.uint8) * 255
+
+        self.fonts = self.up_fonts
+        char_width_start = self.up_left_interval
+        char_width_end = char_width_start + self.up_ch_width
+        char_height_start = self.up_interval
+        char_height_end = char_height_start + self.up_ch_height
+        img[char_height_start:char_height_end, char_width_start:char_width_end] = self.getCharImg(code[0], (
+        self.up_ch_width, self.up_ch_height))
+
+        char_width_start = char_width_end + self.up_ch_interval + self.up_point_size + self.up_ch_interval
+        char_width_end = char_width_start + self.up_ch_width
+        img[char_height_start:char_height_end, char_width_start:char_width_end] = self.getCharImg(code[1], (
+        self.up_ch_width, self.up_ch_height))
+
+        self.fonts = self.dw_fonts
+        char_width_start = self.dw_left_interval
+        char_width_end = char_width_start + self.dw_ch_width
+        char_height_start = char_height_end + self.interval
+        char_height_end = char_height_start + self.dw_ch_height
+
+        for i in range(2, 7):
+            img[char_height_start:char_height_end, char_width_start:char_width_end] = self.getCharImg(code[i], (
+            self.dw_ch_width, self.dw_ch_height))
+
+            char_width_start = char_width_end + self.dw_ch_interval
+            char_width_end = char_width_start + self.dw_ch_width
+
+        return code, cv2.bitwise_and(img, self.template)
 
 
 class Yellow440x140(Plate):
