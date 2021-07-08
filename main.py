@@ -18,21 +18,21 @@ import os
 import shutil
 import tqdm
 
-num = 5000
+num = 20000
 
 color = {
-    'yellow440x220': Yellow440x220,
+    # 'yellow440x220': Yellow440x220,
     'yellow440x140': Yellow440x140,
     'white440x140': White440x140,
-    'white440x220': White440x220,
+    # 'white440x220': White440x220,
     'black440x140': Black440x140,
     'blue440x140': Blue440x140,
     'green480x140': Green480x140,
 }
 
-dir_path = 'fakeclp'
-if os.path.isdir(dir_path):
-    shutil.rmtree(dir_path)
+dir_path = 'fakeclp0708'
+# if os.path.isdir(dir_path):
+#     shutil.rmtree(dir_path)
 
 for name in color.keys():
     os.makedirs(os.path.join(dir_path, name), exist_ok=True)
@@ -64,7 +64,7 @@ for key, value in color.items():
         # cv2.imshow('img', img)
         # cv2.waitKey()
 
-        cv_imwrite(os.path.join(os.path.join(dir_path, f'{key}'), '{}.jpg'.format(code)), 
+        cv_imwrite(os.path.join(os.path.join(dir_path, f'{key}'), '{}_{}.jpg'.format(code, key)), 
                    img)
 
 

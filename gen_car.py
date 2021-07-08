@@ -20,13 +20,13 @@ blue_green = [3, 4]
 
 # True: cause there are existed blue and green license plates, just save image and generate label.
 # False: Generate white, black and yellow license plates, then save image and label.
-blue_or_green = True
+blue_or_green = False
 
 ccpd_dir = '/d/baidubase/CCPD2020/ccpd_green/*'
 ccpd_paths = glob.glob(osp.join(ccpd_dir, '*'))
 random.shuffle(ccpd_paths)
 
-license_dir = '/d/projects/fake-chinese-license-plate/fakeclp'
+license_dir = '/d/projects/shtf_fake_license_plate/fakeclp'
 license_paths = glob.glob(osp.join(license_dir, 'black*', '*'))
 
 save_dir = '/e/datasets/License_plates/green'
@@ -40,6 +40,7 @@ for i, license_path in tqdm(enumerate(license_paths), total=len(license_paths)):
     ccpd_path = ccpd_paths[i]
     ccpd_name = osp.basename(ccpd_path)
     img = cv2.imread(ccpd_path)
+    img_ori = img.copy()
     img_h, img_w, _ = img.shape
 
     points = ccpd_name.split('-')[3]
@@ -77,7 +78,6 @@ for i, license_path in tqdm(enumerate(license_paths), total=len(license_paths)):
                                  [0, 0],
                                  [w, 0]])
 
-
         M = cv2.getPerspectiveTransform(origin_pst, dst_pst)
         new = cv2.warpPerspective(license, M, dsize=(img_w, img_h))
         new_mask = cv2.warpPerspective(mask, M, dsize=(img_w, img_h))
@@ -90,26 +90,28 @@ for i, license_path in tqdm(enumerate(license_paths), total=len(license_paths)):
     # for i, p in enumerate(range(0, len(points), 2)):
     #     cv2.putText(img, f'{i}', (points[p], points[p + 1]), cv2.FONT_HERSHEY_SIMPLEX, 2, color=(0, 0, 255))
 
-    # cv2.imwrite(osp.join(img_dir, f'{license_color}_{license_name}_{i}.jpg'), img)
-    if blue_or_green:
-        shutil.copy(ccpd_path, img_dir)
-    else:
-        cv2.imwrite(osp.join(img_dir, f'{license_color}_{license_name}_{i}.jpg'), img)
+    # if blue_or_green:
+    #     shutil.copy(ccpd_path, img_dir)
+    # else:
+    #     cv2.imwrite(osp.join(img_dir, f'{license_color}_{license_name}_{i}.jpg'), img)
 
-    dst_pst[:, 0] /= img_w
-    dst_pst[:, 1] /= img_h
-    points = dst_pst.reshape(-1)
-    if blue_or_green:
-        str_label = f"{blue_green[1]} {x / img_w} {y / img_h} {wb / img_w} {hb / img_h}"
-        label_name = osp.basename(osp.splitext(ccpd_path)[0]) + '.txt'
-    else:
-        str_label = f"{label_map[license_color]} {x / img_w} {y / img_h} {wb / img_w} {hb / img_h}"
-        label_name = f'{license_color}_{license_name}_{i}.txt'
-    for p in points:
-        str_label += f" {p}"
-    str_label += '\n'
-    with open(osp.join(label_dir, label_name), 'a') as f:
-        f.write(str_label)
+    # dst_pst[:, 0] /= img_w
+    # dst_pst[:, 1] /= img_h
+    # points = dst_pst.reshape(-1)
+    # if blue_or_green:
+    #     str_label = f"{blue_green[1]} {x / img_w} {y / img_h} {wb / img_w} {hb / img_h}"
+    #     label_name = osp.basename(osp.splitext(ccpd_path)[0]) + '.txt'
+    # else:
+    #     str_label = f"{label_map[license_color]} {x / img_w} {y / img_h} {wb / img_w} {hb / img_h}"
+    #     label_name = f'{license_color}_{license_name}_{i}.txt'
+    # for p in points:
+    #     str_label += f" {p}"
+    # str_label += '\n'
+    # with open(osp.join(label_dir, label_name), 'a') as f:
+    #     f.write(str_label)
 
     # cv2.imshow('p', img)
-    # cv2.waitKey(0)
+    cv2.namedWindow('x', cv2.WINDOW_NORMAL)
+    stack_img = np.concatenate([new, img_ori, img], axis=1)
+    cv2.imshow('x', stack_img)
+    cv2.waitKey(0)
