@@ -528,5 +528,6 @@ class Green480x140(Plate):
             char_width_end = char_width_start + self.ch_width
             img[char_height_start:char_height_end, char_width_start:char_width_end] = self.getCharImg(code[i], (
             self.ch_width, self.ch_height))
+        # cv2.imshow('ori', img)
 
         return code, cv2.bitwise_and(img, self.template)
