@@ -32,10 +32,10 @@ ccpd_paths = glob.glob(osp.join(ccpd_dir, '*'))
 random.shuffle(ccpd_paths)
 
 license_dir = '/d/projects/fake-chinese-license-plate/fakeclp0720'
-license_paths = glob.glob(osp.join(license_dir, '*140', '*'))
+license_paths = glob.glob(osp.join(license_dir, '*220', '*'))
 # print(len(license_paths))
 
-save_dir = '/e/datasets/License_plates/detection/all_color0720'
+save_dir = '/e/datasets/License_plates/detection/all_color0730'
 img_dir = osp.join(save_dir, 'images')
 label_dir = osp.join(save_dir, 'labels')
 os.makedirs(img_dir, exist_ok=True)
