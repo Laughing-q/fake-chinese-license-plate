@@ -148,3 +148,4 @@ venv/
 fakeclp/
 fakeclp*/
 
+*.jpg
